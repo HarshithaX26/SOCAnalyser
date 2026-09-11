@@ -703,7 +703,12 @@
     (function () {
       'use strict';
 
-      const API_BASE = 'http://127.0.0.1:8000/api';
+      // Same-origin API by default (works on Render + when served by Flask).
+      // Fall back to the local backend only when the page is opened directly
+      // from the filesystem (file://) for local development.
+      const API_BASE = (location.protocol === 'file:')
+        ? 'http://127.0.0.1:8000/api'
+        : '/api';
       const TIMEOUT_MS = 15000;
 
       /* ---------- helpers ---------- */

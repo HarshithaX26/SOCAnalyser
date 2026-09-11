@@ -1,4 +1,6 @@
 cicids2017_cleaned.csv
 *.pkl
 __pycache__/
+*.pyc
 *.log
+*.part

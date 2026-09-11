@@ -12,7 +12,15 @@ Endpoints (all under /api):
   GET  /api/explain/<id>     -> ranked SHAP contributions for a specific attack-predicted row
   POST /api/predict          -> binary prediction + probability for a supplied feature row
 
-Run:  python ml_backend.py [--port 8000] [--rebuild]
+Run:  python ml_backend.py [--host 0.0.0.0] [--port 8000] [--rebuild]
+
+Deployment:
+  - The cleaned dataset is auto-downloaded on first training run if it is
+    missing (URL comes from the DATASET_URL environment variable). It is never
+    downloaded again once it exists locally.
+  - Uses the Render PORT environment variable when --port is not supplied.
+  - All trained-model artifacts (ml_backend_cache.pkl) are cached on the local
+    filesystem and reused for the lifetime of the service.
 """
 
 import argparse
@@ -21,6 +29,7 @@ import os
 import pickle
 import sys
 import time
+import urllib.request
 
 import numpy as np
 import pandas as pd
@@ -72,6 +81,69 @@ XGB_PARAMS = {
     "n_jobs": -1,
     "random_state": RANDOM_STATE,
 }
+
+
+# ---------------------------------------------------------------------------
+# Dataset availability (download-from-DATASET_URL when missing)
+# ---------------------------------------------------------------------------
+def _download_url(url, dest_path, chunk_size=256 * 1024):
+    """Stream `url` to `dest_path` with progress printed to the logs."""
+    with urllib.request.urlopen(url) as resp, open(dest_path, "wb") as out:
+        total = resp.headers.get("Content-Length")
+        downloaded = 0
+        chunk = resp.read(chunk_size)
+        while chunk:
+            out.write(chunk)
+            downloaded += len(chunk)
+            if total:
+                print(f"[data]   {downloaded / 1e6:,.1f} MB / {int(total) / 1e6:,.1f} MB",
+                      end="\r", flush=True)
+            else:
+                print(f"[data]   {downloaded / 1e6:,.1f} MB downloaded", end="\r", flush=True)
+            chunk = resp.read(chunk_size)
+    print()
+
+
+def ensure_dataset(csv_path=CSV_PATH):
+    """Return a path to the cleaned CIC-IDS2017 CSV, downloading it if absent.
+
+    - If the CSV already exists it is used as-is (never re-downloaded).
+    - Otherwise the DATASET_URL environment variable is required.
+    - Downloads to a temporary ".part" file and only renames it to the final
+      name after the transfer completes successfully.
+    - Raises a clear error (never a silent fake fallback) on any failure.
+    """
+    if os.path.exists(csv_path):
+        size_mb = os.path.getsize(csv_path) / 1e6
+        print(f"[data] Using existing dataset: {csv_path} ({size_mb:,.1f} MB)")
+        return csv_path
+
+    dataset_url = os.environ.get("DATASET_URL", "").strip()
+    if not dataset_url:
+        raise RuntimeError(
+            f"Cleaned dataset not found at {csv_path} and the DATASET_URL "
+            "environment variable is not set. Configure DATASET_URL in Render's "
+            "Environment Variables (or place the CSV next to ml_backend.py)."
+        )
+
+    print(f"[data] Dataset '{os.path.basename(csv_path)}' not found locally.")
+    print(f"[data] Downloading from DATASET_URL: {dataset_url}")
+    tmp_path = csv_path + ".part"
+    try:
+        _download_url(dataset_url, tmp_path)
+        os.replace(tmp_path, csv_path)
+        size_mb = os.path.getsize(csv_path) / 1e6
+        print(f"[data] Download complete -> {csv_path} ({size_mb:,.1f} MB)")
+    except Exception as exc:  # noqa: BLE001
+        if os.path.exists(tmp_path):
+            try:
+                os.remove(tmp_path)
+            except OSError:
+                pass
+        raise RuntimeError(
+            f"Dataset download from DATASET_URL failed: {exc}"
+        ) from exc
+    return csv_path
 
 
 def load_sampled_dataset(csv_path):
@@ -189,6 +261,7 @@ class MLEngine:
     def _train(self):
         t0 = time.time()
         print("[ml] Loading cleaned CIC-IDS2017 dataset (stratified sample)...")
+        ensure_dataset(self.csv_path)
         df, n_chunks = load_sampled_dataset(self.csv_path)
         print(f"[ml] Sample size: {len(df)} rows (from {n_chunks} chunks).")
 
@@ -388,18 +461,28 @@ def predict():
 
 def main():
     parser = argparse.ArgumentParser(description="SOCAnalyser ML backend (XGBoost + SHAP)")
-    parser.add_argument("--host", default="127.0.0.1")
-    parser.add_argument("--port", type=int, default=8000)
+    parser.add_argument("--host",
+                        default=os.environ.get("HOST", "0.0.0.0"),
+                        help="Bind address (default: 0.0.0.0)")
+    parser.add_argument("--port", type=int,
+                        default=int(os.environ.get("PORT", "8000")),
+                        help="Bind port (default: Render $PORT or 8000 locally)")
     parser.add_argument("--rebuild", action="store_true",
                         help="Force retraining even if a model cache exists")
     args = parser.parse_args()
 
     global ENGINE
-    ENGINE = MLEngine(CSV_PATH, rebuild=args.rebuild)
+    try:
+        ENGINE = MLEngine(CSV_PATH, rebuild=args.rebuild)
+    except Exception as exc:  # noqa: BLE001
+        print("[fatal] Could not initialise the ML engine:", exc, file=sys.stderr)
+        print("[fatal] The service will not start with fabricated model outputs.", file=sys.stderr)
+        sys.exit(1)
 
     print("=" * 60)
     print("SOCAnalyser ML Backend")
-    print(f"  Metrics (from real test predictions): {ENGINE.metrics}")
+    if ENGINE.ready:
+        print(f"  Metrics (from real test predictions): {ENGINE.metrics}")
     print(f"  Attack-predicted test rows available: {ENGINE.attack_count}")
     print(f"  Serving dashboard + API at http://{args.host}:{args.port}/")
     print("=" * 60)
