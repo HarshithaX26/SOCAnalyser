@@ -1,16 +1,4 @@
-# Dataset
 cicids2017_cleaned.csv
-
-# Python cache
-__pycache__/
-*.pyc
-
-# Generated model/cache files
 *.pkl
-
-# Logs
+__pycache__/
 *.log
-
-# OS files
-.DS_Store
-Thumbs.db
