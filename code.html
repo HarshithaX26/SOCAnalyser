@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SIH26153: AI-Based Network Attack Forecasting</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Lucide Icons CDN -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<!-- Google Fonts: JetBrains Mono & Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+          },
+          colors: {
+            zinc: {
+              850: '#1e1e24',
+              900: '#18181b',
+              925: '#121215',
+              950: '#09090b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Sleek minimal scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #09090b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #27272a;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3f3f46;
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-zinc-100 font-sans min-h-screen selection:bg-indigo-500/30 selection:text-indigo-200 antialiased relative">
+<div class="relative z-10 flex flex-col min-h-screen">
+<!-- ========================================================================= -->
+<!-- TOP HEADER / SOC COMMAND BAR (LINEAR / VERCEL SAAS STYLE)                 -->
+<!-- ========================================================================= -->
+<header class="border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50 px-4 py-2.5">
+<div class="max-w-[1920px] mx-auto flex flex-wrap items-center justify-between gap-y-3">
+<!-- Left: Logo & Platform Title -->
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-100 shadow-sm">
+<i class="w-4 h-4 text-indigo-400" data-lucide="shield-alert"></i>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h1 class="text-sm font-semibold tracking-tight text-zinc-100 flex items-center gap-2">
+<span>SIH26153: AI-Based Network Attack Forecasting</span>
+</h1>
+<span class="px-1.5 py-0.5 text-[10px] font-mono font-medium rounded-md bg-zinc-900 text-zinc-400 border border-zinc-800">
+                v2.4-PROD
+              </span>
+</div>
+<p class="text-xs text-zinc-400 flex items-center gap-2 mt-0.5">
+<span>Deep Transformer + SHAP Attention Explainer</span>
+<span class="text-zinc-700">•</span>
+<span class="text-zinc-400">Autonomous SOC Defense Framework</span>
+</p>
+</div>
+</div>
+<!-- Middle: Status Badges -->
+<div class="flex items-center gap-2.5 flex-wrap">
+<!-- Live Streaming Badge -->
+<div class="flex items-center gap-2 px-2.5 py-1 rounded-md bg-zinc-900/90 border border-zinc-800 text-zinc-300 text-xs font-medium">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+</span>
+<span class="tracking-tight text-xs text-zinc-300">Live Streaming</span>
+</div>
+<!-- Dataset Badge -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-zinc-900/90 border border-zinc-800 text-xs">
+<i class="w-3.5 h-3.5 text-zinc-400" data-lucide="database"></i>
+<span class="text-zinc-400">Dataset:</span>
+<span class="font-mono text-zinc-200 font-semibold tracking-tight">CIC-IDS2017</span>
+</div>
+<!-- WebSocket Status -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-zinc-900/90 border border-zinc-800 text-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span class="font-mono text-zinc-300 text-xs font-medium">WS: CONNECTED</span>
+</div>
+<!-- Linear-style Navigation Segment Control -->
+<div class="hidden xl:flex items-center bg-zinc-900/80 p-0.5 rounded-lg border border-zinc-800/80">
+<button class="px-2.5 py-1 text-xs font-medium rounded-md text-white bg-zinc-800 shadow-sm flex items-center gap-1.5 cursor-default transition-colors">
+<i class="w-3.5 h-3.5 text-indigo-400" data-lucide="layout-dashboard"></i>
+<span>Forecast Matrix</span>
+</button>
+<button class="px-2.5 py-1 text-xs font-medium rounded-md text-zinc-400 hover:text-zinc-200 cursor-default flex items-center gap-1.5 transition-colors">
+<i class="w-3.5 h-3.5" data-lucide="network"></i>
+<span>Telemetry</span>
+</button>
+<button class="px-2.5 py-1 text-xs font-medium rounded-md text-zinc-400 hover:text-zinc-200 cursor-default flex items-center gap-1.5 transition-colors">
+<i class="w-3.5 h-3.5" data-lucide="cpu"></i>
+<span>Model Weights</span>
+</button>
+</div>
+</div>
+<!-- Right: Baseline Model Metrics & Threat Badge -->
+<div class="flex items-center gap-3">
+<div class="grid grid-cols-3 md:grid-cols-6 gap-3 px-3 py-1 bg-zinc-900/90 border border-zinc-800 rounded-lg" id="model-weights-grid" title="Real metrics from XGBoost predictions on held-out CIC-IDS2017 test rows">
+<div class="text-left border-r border-zinc-800/80 pr-3">
+<div class="text-[10px] text-zinc-400 font-medium">Accuracy</div>
+<div class="text-xs font-mono font-semibold text-zinc-100" id="m-accuracy">—</div>
+</div>
+<div class="text-left border-r border-zinc-800/80 pr-3">
+<div class="text-[10px] text-zinc-400 font-medium">FPR</div>
+<div class="text-xs font-mono font-semibold text-emerald-400" id="m-fpr">—</div>
+</div>
+<div class="text-left border-r border-zinc-800/80 pr-3">
+<div class="text-[10px] text-zinc-400 font-medium">Precision</div>
+<div class="text-xs font-mono font-semibold text-indigo-400" id="m-precision">—</div>
+</div>
+<div class="text-left border-r border-zinc-800/80 pr-3">
+<div class="text-[10px] text-zinc-400 font-medium">Recall</div>
+<div class="text-xs font-mono font-semibold text-indigo-400" id="m-recall">—</div>
+</div>
+<div class="text-left border-r border-zinc-800/80 pr-3">
+<div class="text-[10px] text-zinc-400 font-medium">F1 Score</div>
+<div class="text-xs font-mono font-semibold text-indigo-400" id="m-f1">—</div>
+</div>
+<div class="text-left">
+<div class="text-[10px] text-zinc-400 font-medium">Inference</div>
+<div class="text-xs font-mono font-semibold text-zinc-200" id="m-inference">—</div>
+</div>
+</div>
+<!-- Muted Modern Threat Badge -->
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+<div class="flex items-center gap-1.5">
+<span class="text-[10px] uppercase font-medium text-amber-500/80">DEFCON:</span>
+<span class="text-xs font-mono font-semibold tracking-wide text-amber-400">ELEVATED</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- ========================================================================= -->
+<!-- MAIN CONTENT: 3-COLUMN SAAS LAYOUT                                        -->
+<!-- ========================================================================= -->
+<main class="flex-1 p-3.5 max-w-[1920px] mx-auto w-full grid grid-cols-12 gap-3.5">
+<!-- ======================================================================= -->
+<!-- LEFT PANEL: STREAM & EXPLAINABILITY (4 cols)                            -->
+<!-- ======================================================================= -->
+<section class="col-span-12 lg:col-span-4 xl:col-span-4 flex flex-col gap-3.5">
+<!-- 1. LIVE PACKET STREAM TABLE -->
+<div class="bg-zinc-900/90 border border-zinc-800 rounded-xl p-3.5 shadow-sm flex flex-col flex-1 relative backdrop-blur-sm">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<i class="w-4 h-4 text-zinc-400" data-lucide="activity"></i>
+<h2 class="text-xs font-semibold tracking-wide text-zinc-100 uppercase">Live Packet Stream</h2>
+<span class="px-1.5 py-0.5 bg-zinc-800 text-zinc-300 text-[10px] font-mono rounded border border-zinc-700/60 font-medium">4,812 pps</span>
+</div>
+<div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-[10px] font-mono font-semibold">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+<span id="attack-flows-badge">— ATTACK FLOWS</span>
+</div>
+</div>
+<!-- Table Container -->
+<div class="overflow-x-auto overflow-y-auto max-h-[300px] border border-zinc-800 rounded-lg bg-zinc-950/60 text-xs">
+<table class="w-full text-left border-collapse">
+<thead class="sticky top-0 bg-zinc-900/95 border-b border-zinc-800 text-zinc-400 text-[10px] uppercase font-medium tracking-wider">
+<tr>
+<th class="py-2 px-2.5 font-medium">Time</th>
+<th class="py-2 px-2 font-medium">Source IP</th>
+<th class="py-2 px-2 font-medium">Port / Proto</th>
+<th class="py-2 px-2 font-medium">Event / Anomaly</th>
+<th class="py-2 px-2.5 text-right font-medium">Score</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-zinc-800/60 font-mono text-xs">
+<!-- Malicious Flow (Refined Subtle Rose Tint) -->
+<tr class="bg-rose-950/20 border-l-2 border-rose-500 text-zinc-200">
+<td class="py-2 px-2.5 text-rose-400 font-medium">14:02:18.91</td>
+<td class="py-2 px-2 text-rose-300 font-semibold flex items-center gap-1.5">
+<i class="w-3.5 h-3.5 text-rose-400" data-lucide="skull"></i>
+                    192.168.1.142
+                  </td>
+<td class="py-2 px-2 text-zinc-300"><span class="px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-300 text-[11px] font-medium border border-rose-500/20">8080 / TCP</span></td>
+<td class="py-2 px-2 text-zinc-200 font-sans font-medium">
+<span class="inline-block px-1.5 py-0.5 bg-rose-500/15 rounded text-rose-200 text-xs border border-rose-500/30">
+                      RCE Deserialization
+                    </span>
+</td>
+<td class="py-2 px-2.5 text-right font-bold text-rose-400">0.96</td>
+</tr>
+<!-- Suspicious Flow -->
+<tr class="hover:bg-zinc-850/50 transition-colors">
+<td class="py-1.5 px-2.5 text-zinc-500">14:02:18.44</td>
+<td class="py-1.5 px-2 text-amber-300 font-medium">192.168.1.142</td>
+<td class="py-1.5 px-2 text-zinc-400">443 / TLS</td>
+<td class="py-1.5 px-2 text-amber-400/90 font-sans text-xs">SYN Stealth Sweep</td>
+<td class="py-1.5 px-2.5 text-right font-semibold text-amber-400">0.78</td>
+</tr>
+<!-- Normal flows -->
+<tr class="hover:bg-zinc-850/50 transition-colors text-zinc-300">
+<td class="py-1.5 px-2.5 text-zinc-500">14:02:17.82</td>
+<td class="py-1.5 px-2 text-zinc-300">10.0.4.12</td>
+<td class="py-1.5 px-2 text-zinc-400">53 / UDP</td>
+<td class="py-1.5 px-2 text-zinc-400 font-sans text-xs">DNS Resolution Query</td>
+<td class="py-1.5 px-2.5 text-right text-zinc-500">0.02</td>
+</tr>
+<tr class="hover:bg-zinc-850/50 transition-colors text-zinc-300">
+<td class="py-1.5 px-2.5 text-zinc-500">14:02:17.30</td>
+<td class="py-1.5 px-2 text-zinc-300">172.16.0.45</td>
+<td class="py-1.5 px-2 text-zinc-400">443 / TCP</td>
+<td class="py-1.5 px-2 text-zinc-400 font-sans text-xs">HTTPS Valid Session</td>
+<td class="py-1.5 px-2.5 text-right text-zinc-500">0.04</td>
+</tr>
+<tr class="hover:bg-zinc-850/50 transition-colors text-zinc-300">
+<td class="py-1.5 px-2.5 text-zinc-500">14:02:16.95</td>
+<td class="py-1.5 px-2 text-zinc-300">10.0.12.8</td>
+<td class="py-1.5 px-2 text-zinc-400">22 / SSH</td>
+<td class="py-1.5 px-2 text-zinc-400 font-sans text-xs">SSH PubKey Auth OK</td>
+<td class="py-1.5 px-2.5 text-right text-zinc-500">0.01</td>
+</tr>
+<tr class="hover:bg-zinc-850/50 transition-colors text-zinc-300">
+<td class="py-1.5 px-2.5 text-zinc-500">14:02:16.21</td>
+<td class="py-1.5 px-2 text-zinc-300">192.168.1.189</td>
+<td class="py-1.5 px-2 text-zinc-400">3306 / TCP</td>
+<td class="py-1.5 px-2 text-zinc-400 font-sans text-xs">MySQL Connection Pool</td>
+<td class="py-1.5 px-2.5 text-right text-zinc-500">0.03</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Bottom packet rate indicator -->
+<div class="mt-2.5 pt-2 border-t border-zinc-800/80 flex items-center justify-between text-xs text-zinc-400">
+<span class="flex items-center gap-1.5 font-sans">
+<i class="w-3.5 h-3.5 text-zinc-400" data-lucide="radio"></i>
+              Buffer: <span class="font-mono text-zinc-300">128 KB / 500ms sliding slice</span>
+</span>
+<span class="font-sans text-zinc-400">Filter: <span class="font-mono text-zinc-300">eth0, ens3</span></span>
+</div>
+</div>
+<!-- 2. EXPLAINABLE AI (SHAP) -->
+<div class="bg-zinc-900/90 border border-zinc-800 rounded-xl p-3.5 shadow-sm flex flex-col backdrop-blur-sm">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<i class="w-4 h-4 text-indigo-400" data-lucide="brain-circuit"></i>
+<h2 class="text-xs font-semibold tracking-wide text-zinc-100 uppercase">EXPLAINABLE AI (SHAP)</h2>
+</div>
+<span class="px-2 py-0.5 rounded-md bg-zinc-800 text-[10px] font-mono text-zinc-400 border border-zinc-700/60">
+              Impact Factor (φ)
+            </span>
+</div>
+<p class="text-xs text-zinc-400 mb-3" id="shap-desc">
+            Loading real SHAP attributions for an attack-predicted flow from the XGBoost model…
+          </p>
+<!-- Real attack-row selector + refresh -->
+<div class="flex items-center gap-2 mb-3">
+<select id="attack-row-select" class="flex-1 min-w-0 bg-zinc-950 border border-zinc-800 rounded-md px-2 py-1.5 text-xs font-mono text-zinc-300 focus:outline-none focus:border-indigo-500" title="Select a real CIC-IDS2017 flow that the trained XGBoost model predicted as an Attack">
+<option value="">Loading attack rows…</option>
+</select>
+<button id="btn-refresh-shap" type="button" title="Refresh / explain the selected attack row" class="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-zinc-950 border border-zinc-800 text-zinc-300 hover:border-zinc-600 hover:text-zinc-100 text-xs font-medium transition-colors">
+<i class="w-3.5 h-3.5" data-lucide="refresh-cw"></i><span>Explain</span>
+</button>
+</div>
+<!-- Sleek SaaS Horizontal Bar Chart Breakdown -->
+<div id="shap-list" class="space-y-2.5 text-xs">
+<div class="flex items-center gap-2 text-zinc-500 py-1">
+<span class="inline-block w-3 h-3 rounded-full border-2 border-zinc-700 border-t-indigo-400 animate-spin"></span>
+<span class="text-[11px]">Connecting to ML backend (XGBoost + SHAP)…</span>
+</div>
+</div>
+<!-- Footer Tag Requirement -->
+<div class="mt-3.5 pt-2.5 border-t border-zinc-800/80 flex flex-col gap-1.5 text-[11px]">
+<div class="flex items-center justify-between">
+<span class="text-zinc-400">
+              Model Baseline: <span class="text-zinc-200 font-medium" id="shap-model-name">XGBoost (SHAP TreeExplainer)</span>
+</span>
+<span class="font-mono text-zinc-500 text-[10px]" id="shap-model-note">same model as classifier</span>
+</div>
+<div class="flex items-center gap-3 text-[10px] text-zinc-500">
+<span class="flex items-center gap-1"><span class="w-2 h-2 bg-rose-500 inline-block rounded-full"></span> Toward Attack</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 bg-emerald-500 inline-block rounded-full"></span> Toward Normal Traffic</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================================================================= -->
+<!-- CENTER PANEL: CORE FORECASTING (5 cols)                                -->
+<!-- ======================================================================= -->
+<section class="col-span-12 lg:col-span-5 xl:col-span-5 flex flex-col gap-3.5">
+<!-- 1. MITRE ATT&CK FORECASTING PROGRESSION -->
+<div class="bg-zinc-900/90 border border-zinc-800 rounded-xl p-3.5 shadow-sm backdrop-blur-sm">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<i class="w-4 h-4 text-zinc-400" data-lucide="crosshair"></i>
+<h2 class="text-xs font-semibold tracking-wide text-zinc-100 uppercase">
+                MITRE ATT&amp;CK Forecasting Progression
+              </h2>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-[10px] font-mono font-semibold">
+              KILL-CHAIN: IN PROGRESS
+            </span>
+</div>
+<!-- Step-by-Step Horizontal Stage Bar -->
+<div class="grid grid-cols-4 gap-2">
+<!-- Stage 1: Reconnaissance (Completed) -->
+<div class="p-2.5 rounded-lg bg-zinc-950/70 border border-zinc-800 relative">
+<div class="flex items-center justify-between text-[10px] text-zinc-400 mb-1">
+<span class="font-medium">STAGE 1</span>
+<i class="w-3.5 h-3.5 text-emerald-400" data-lucide="check-circle"></i>
+</div>
+<div class="font-mono font-bold text-zinc-200 text-xs truncate">TA0043</div>
+<div class="text-[11px] text-zinc-400 truncate mt-0.5">Reconnaissance</div>
+<div class="mt-2 w-full bg-zinc-800 h-1 rounded-full overflow-hidden">
+<div class="bg-emerald-500 h-full w-full"></div>
+</div>
+<div class="mt-1 text-[10px] font-mono text-emerald-400 font-medium text-right">COMPLETED</div>
+</div>
+<!-- Stage 2: Initial Access (Completed) -->
+<div class="p-2.5 rounded-lg bg-zinc-950/70 border border-zinc-800 relative">
+<div class="flex items-center justify-between text-[10px] text-zinc-400 mb-1">
+<span class="font-medium">STAGE 2</span>
+<i class="w-3.5 h-3.5 text-emerald-400" data-lucide="check-circle"></i>
+</div>
+<div class="font-mono font-bold text-zinc-200 text-xs truncate">TA0001</div>
+<div class="text-[11px] text-zinc-400 truncate mt-0.5">Initial Access</div>
+<div class="mt-2 w-full bg-zinc-800 h-1 rounded-full overflow-hidden">
+<div class="bg-emerald-500 h-full w-full"></div>
+</div>
+<div class="mt-1 text-[10px] font-mono text-emerald-400 font-medium text-right">COMPLETED</div>
+</div>
+<!-- Stage 3: Execution (Active - Refined Linear Accent) -->
+<div class="p-2.5 rounded-lg bg-zinc-900 border border-rose-500/40 relative shadow-sm">
+<div class="flex items-center justify-between text-[10px] text-rose-400 mb-1">
+<span class="font-medium flex items-center gap-1">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                  STAGE 3
+                </span>
+<i class="w-3.5 h-3.5 text-rose-400" data-lucide="alert-triangle"></i>
+</div>
+<div class="font-mono font-bold text-white text-xs truncate">TA0002</div>
+<div class="text-[11px] text-zinc-200 font-medium truncate mt-0.5">Execution - Active</div>
+<div class="mt-2 w-full bg-zinc-950 h-1 rounded-full overflow-hidden border border-zinc-800/80">
+<div class="bg-rose-500 h-full w-[78%]"></div>
+</div>
+<div class="mt-1 text-[10px] font-mono text-rose-400 font-semibold text-right tracking-tight">78% CONF.</div>
+</div>
+<!-- Stage 4: Exfiltration (Forecasted Next) -->
+<div class="p-2.5 rounded-lg bg-zinc-950/40 border border-dashed border-zinc-800 text-zinc-500 relative">
+<div class="flex items-center justify-between text-[10px] text-zinc-500 mb-1">
+<span class="font-medium">STAGE 4</span>
+<i class="w-3 h-3 text-zinc-600" data-lucide="clock"></i>
+</div>
+<div class="font-mono font-medium text-zinc-400 text-xs truncate">TA0010</div>
+<div class="text-[11px] text-zinc-500 truncate mt-0.5">Exfiltration</div>
+<div class="mt-2 w-full bg-zinc-900 h-1 rounded-full overflow-hidden">
+<div class="bg-zinc-700 h-full w-[24%]"></div>
+</div>
+<div class="mt-1 text-[10px] font-mono text-zinc-500 text-right">FORECAST (24%)</div>
+</div>
+</div>
+</div>
+<!-- 2. ATTACK PROBABILITY CURVE -->
+<div class="bg-zinc-900/90 border border-zinc-800 rounded-xl p-3.5 shadow-sm flex-1 flex flex-col backdrop-blur-sm relative">
+<div class="flex items-center justify-between mb-2">
+<div>
+<div class="flex items-center gap-2">
+<i class="w-4 h-4 text-indigo-400" data-lucide="trending-up"></i>
+<h2 class="text-xs font-semibold tracking-wide text-zinc-100 uppercase">
+                  Attack Probability Curve (60s Window)
+                </h2>
+</div>
+<p class="text-xs text-zinc-400 mt-0.5">
+                Attention-weight trajectory with LSTM Multi-Horizon Forecaster
+              </p>
+</div>
+<!-- Modern SaaS Impact & Target Badges -->
+<div class="flex items-center gap-2">
+<div class="bg-rose-500/10 border border-rose-500/20 rounded-lg px-2.5 py-1 text-right">
+<div class="text-[9px] uppercase font-medium text-rose-400">PREDICTED TIME TO IMPACT</div>
+<div class="text-sm font-mono font-bold text-rose-300 tracking-tight">00:42 sec</div>
+</div>
+<div class="bg-zinc-950 border border-zinc-800 rounded-lg px-2.5 py-1 text-right">
+<div class="text-[9px] uppercase font-medium text-zinc-400">TARGET ASSET</div>
+<div class="text-xs font-mono font-semibold text-zinc-200">Tomcat:8080</div>
+</div>
+</div>
+</div>
+<!-- Clean Area Chart Container -->
+<div class="relative flex-1 min-h-[260px] bg-zinc-950/80 border border-zinc-800 rounded-lg p-2.5 flex flex-col justify-between overflow-hidden">
+<!-- Subtle Threshold Line -->
+<div class="absolute top-[24%] left-10 right-4 flex items-center gap-2 z-10 pointer-events-none">
+<span class="h-[1px] flex-1 border-b border-dashed border-rose-500/40"></span>
+<span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-rose-400">
+                CRITICAL EXPLOIT THRESHOLD (0.85)
+              </span>
+</div>
+<!-- SVG Chart with Linear-style muted gradients -->
+<div class="relative w-full h-[220px]">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 500 200">
+<defs>
+<!-- Gradient for Area fill -->
+<lineargradient id="probGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#f43f5e" stop-opacity="0.35"></stop>
+<stop offset="60%" stop-color="#f59e0b" stop-opacity="0.10"></stop>
+<stop offset="100%" stop-color="#6366f1" stop-opacity="0.0"></stop>
+</lineargradient>
+<!-- Attention weight band -->
+<lineargradient id="attentionBand" x1="0" x2="1" y1="0" y2="0">
+<stop offset="0%" stop-color="#6366f1" stop-opacity="0.03"></stop>
+<stop offset="100%" stop-color="#f43f5e" stop-opacity="0.15"></stop>
+</lineargradient>
+</defs>
+<!-- Background Horizontal Grid Lines -->
+<line stroke="#27272a" stroke-dasharray="3,3" x1="30" x2="490" y1="30" y2="30"></line>
+<line stroke="#27272a" stroke-dasharray="3,3" x1="30" x2="490" y1="75" y2="75"></line>
+<line stroke="#27272a" stroke-dasharray="3,3" x1="30" x2="490" y1="120" y2="120"></line>
+<line stroke="#27272a" stroke-dasharray="3,3" x1="30" x2="490" y1="165" y2="165"></line>
+<!-- Attention Overlay Region -->
+<rect fill="url(#attentionBand)" height="175" rx="6" width="160" x="330" y="10"></rect>
+<text fill="#a1a1aa" font-family="Inter" font-size="9" font-weight="600" x="340" y="24">ATTENTION OVERLAY (α = 0.94)</text>
+<!-- Area Fill Path -->
+<path d="M 35 170 
+                         L 70 162 
+                         L 120 155 
+                         L 165 148 
+                         L 210 145 
+                         L 260 130 
+                         L 310 115 
+                         L 360 85 
+                         L 410 55 
+                         L 450 42 
+                         L 485 36 
+                         L 485 185 
+                         L 35 185 Z" fill="url(#probGradient)"></path>
+<!-- Main Probability Curve Stroke -->
+<path d="M 35 170 
+                         L 70 162 
+                         L 120 155 
+                         L 165 148 
+                         L 210 145 
+                         L 260 130 
+                         L 310 115 
+                         L 360 85 
+                         L 410 55 
+                         L 450 42 
+                         L 485 36" fill="none" stroke="#f43f5e" stroke-linecap="round" stroke-width="2"></path>
+<!-- Secondary Trend Baseline -->
+<path d="M 35 175 L 120 170 L 210 168 L 310 160 L 410 155 L 485 150" fill="none" stroke="#71717a" stroke-dasharray="4,4" stroke-width="1.2"></path>
+<!-- Critical Hit Point Anchor -->
+<circle cx="485" cy="36" fill="#f43f5e" r="4" stroke="#09090b" stroke-width="2"></circle>
+</svg>
+<!-- Axis labels -->
+<div class="flex justify-between font-mono text-[10px] text-zinc-500 px-2 mt-1">
+<span>T-60s</span>
+<span>T-45s</span>
+<span>T-30s</span>
+<span>T-15s (Recon Detected)</span>
+<span class="text-zinc-400">T-5s</span>
+<span class="text-rose-400 font-semibold">T+0s (NOW: 0.94)</span>
+<span class="text-rose-400 font-bold">T+42s (IMPACT)</span>
+</div>
+</div>
+<!-- Legend & Interactive status footer -->
+<div class="flex items-center justify-between border-t border-zinc-800/80 pt-2 px-1 text-xs">
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1.5 text-zinc-300">
+<span class="w-2.5 h-1 bg-rose-500 inline-block rounded-full"></span>
+                  P(Attack Execution)
+                </span>
+<span class="flex items-center gap-1.5 text-zinc-400">
+<span class="w-2.5 h-1 bg-zinc-500 inline-block rounded-full"></span>
+                  Baseline Organic Noise
+                </span>
+<span class="flex items-center gap-1.5 text-zinc-400">
+<span class="w-2 h-2 bg-rose-500/20 border border-rose-500/40 inline-block rounded-sm"></span>
+                  Transformer Self-Attention
+                </span>
+</div>
+<span class="text-zinc-300 text-xs font-medium flex items-center gap-1">
+<i class="w-3.5 h-3.5 text-emerald-400" data-lucide="check"></i>
+                Kalman Filter Synced
+              </span>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================================================================= -->
+<!-- RIGHT PANEL: MITIGATIONS & TOPOLOGY (3 cols)                            -->
+<!-- ======================================================================= -->
+<section class="col-span-12 lg:col-span-3 xl:col-span-3 flex flex-col gap-3.5">
+<!-- 1. ACTION ENGINE: DYNAMIC MITIGATION CARDS -->
+<div class="bg-zinc-900/90 border border-zinc-800 rounded-xl p-3.5 shadow-sm flex flex-col backdrop-blur-sm">
+<div class="flex items-center justify-between mb-2.5">
+<div class="flex items-center gap-2">
+<i class="w-4 h-4 text-indigo-400" data-lucide="zap"></i>
+<h2 class="text-xs font-semibold tracking-wide text-zinc-100 uppercase">
+                Action Engine
+              </h2>
+</div>
+<span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-zinc-800 border border-zinc-700/80 text-zinc-300 font-medium">
+              3 ACTIONS PENDING
+            </span>
+</div>
+<!-- Primary EXECUTE ALL MITIGATIONS CTA (Linear-style Solid Indigo Button) -->
+<button class="w-full mb-3 py-2 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium tracking-wide shadow-sm transition-all flex items-center justify-center gap-2 active:scale-[0.99]" id="btn-execute-all">
+<i class="w-4 h-4" data-lucide="shield-check"></i>
+<span>EXECUTE ALL MITIGATIONS</span>
+</button>
+<!-- List of dynamic rule-based mitigation cards -->
+<div class="space-y-2.5 text-xs">
+<!-- Mitigation Card 1: Block IP -->
+<div class="p-2.5 rounded-lg bg-zinc-950/70 border border-zinc-800 hover:border-zinc-700 transition-colors">
+<div class="flex items-start justify-between gap-1 mb-1.5">
+<div>
+<div class="flex items-center gap-1.5 font-medium text-zinc-200">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+<span>Block IP <span class="font-mono text-zinc-100">192.168.1.142</span></span>
+</div>
+<div class="text-[11px] text-zinc-400 mt-0.5">iptables / DROP inbound &amp; outbound</div>
+</div>
+<span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20 font-semibold">
+                  P0 CRITICAL
+                </span>
+</div>
+<button class="w-full mt-2 py-1.5 px-2 rounded-md bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 text-[11px] font-medium tracking-wide transition-colors flex items-center justify-center gap-1.5">
+<i class="w-3 h-3 text-zinc-400" data-lucide="ban"></i>
+<span>Execute Firewall Rule</span>
+</button>
+</div>
+<!-- Mitigation Card 2: Isolate Port 8080 -->
+<div class="p-2.5 rounded-lg bg-zinc-950/70 border border-zinc-800 hover:border-zinc-700 transition-colors">
+<div class="flex items-start justify-between gap-1 mb-1.5">
+<div>
+<div class="flex items-center gap-1.5 font-medium text-zinc-200">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+<span>Isolate Port <span class="font-mono text-zinc-100">8080</span></span>
+</div>
+<div class="text-[11px] text-zinc-400 mt-0.5">Tomcat ingress sandbox redirect</div>
+</div>
+<span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold">
+                  P1 HIGH
+                </span>
+</div>
+<button class="w-full mt-2 py-1.5 px-2 rounded-md bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 text-[11px] font-medium tracking-wide transition-colors flex items-center justify-center gap-1.5">
+<i class="w-3 h-3 text-zinc-400" data-lucide="lock"></i>
+<span>Isolate Service</span>
+</button>
+</div>
+<!-- Mitigation Card 3: Revoke Token -->
+<div class="p-2.5 rounded-lg bg-zinc-950/70 border border-zinc-800 hover:border-zinc-700 transition-colors">
+<div class="flex items-start justify-between gap-1 mb-1.5">
+<div>
+<div class="flex items-center gap-1.5 font-medium text-zinc-200">
+<span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+<span>Revoke Token</span>
+</div>
+<div class="text-[11px] text-zinc-400 mt-0.5">Invalidate JWT Bearer sessions</div>
+</div>
+<span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700 font-semibold">
+                  P2 MED
+                </span>
+</div>
+<button class="w-full mt-2 py-1.5 px-2 rounded-md bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 text-[11px] font-medium tracking-wide transition-colors flex items-center justify-center gap-1.5">
+<i class="w-3 h-3 text-zinc-400" data-lucide="key-round"></i>
+<span>Purge Access Token</span>
+</button>
+</div>
+</div>
+</div>
+<!-- 2. TOPOLOGY GRAPH CONTAINER (MINIMALIST SAAS ENTERPRISE GRAPH) -->
+<div class="bg-zinc-900/90 border border-zinc-800 rounded-xl p-3.5 shadow-sm flex-1 flex flex-col backdrop-blur-sm relative">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<i class="w-4 h-4 text-zinc-400" data-lucide="network"></i>
+<h2 class="text-xs font-semibold tracking-wide text-zinc-100 uppercase">
+                TOPOLOGY GRAPH
+              </h2>
+</div>
+<span class="text-[10px] text-zinc-400 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Live Mesh Sync
+            </span>
+</div>
+<!-- Network Map Visual Canvas -->
+<div class="relative flex-1 min-h-[190px] bg-zinc-950/80 border border-zinc-800 rounded-lg p-2 overflow-hidden flex items-center justify-center">
+<!-- Crisp SVG Vector connectors -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none" viewbox="0 0 300 180">
+<!-- Edge Router to App Node -->
+<line stroke="#3f3f46" stroke-dasharray="3,3" stroke-width="1.5" x1="150" x2="70" y1="35" y2="105"></line>
+<!-- Adversary to App Node (Active Compromised Vector) -->
+<line stroke="#f43f5e" stroke-dasharray="4,4" stroke-width="1.5" x1="70" x2="230" y1="105" y2="105"></line>
+<!-- App Node to DB Cluster -->
+<line stroke="#3f3f46" stroke-dasharray="3,3" stroke-width="1.5" x1="230" x2="150" y1="105" y2="150"></line>
+<!-- Perimeter Check -->
+<line stroke="#27272a" stroke-width="1" x1="150" x2="230" y1="35" y2="105"></line>
+<line stroke="#27272a" stroke-width="1" x1="70" x2="150" y1="105" y2="150"></line>
+<!-- Subtly animated packet dot -->
+<circle cx="150" cy="105" fill="#f43f5e" r="2.5">
+<animate attributename="cx" dur="2s" repeatcount="indefinite" values="70;230"></animate>
+</circle>
+</svg>
+<!-- Node 1: Edge Router (Top) -->
+<div class="absolute top-2 left-1/2 -translate-x-1/2 flex flex-col items-center">
+<div class="w-7 h-7 rounded-md bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-sm">
+<i class="w-3.5 h-3.5 text-zinc-300" data-lucide="router"></i>
+</div>
+<span class="text-[10px] text-zinc-400 mt-1 font-medium">Edge Router</span>
+</div>
+<!-- Node 2: Adversary (Left - Infiltrator) -->
+<div class="absolute left-4 top-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="w-8 h-8 rounded-md bg-rose-500/10 border border-rose-500/30 flex items-center justify-center">
+<i class="w-4 h-4 text-rose-400" data-lucide="skull"></i>
+</div>
+<span class="text-[11px] font-medium text-rose-300 mt-1">Adversary</span>
+<span class="text-[10px] font-mono text-zinc-500">.142</span>
+</div>
+<!-- Node 3: App Node (Target Right) -->
+<div class="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col items-center">
+<div class="w-8 h-8 rounded-md bg-zinc-900 border border-zinc-700 flex items-center justify-center shadow-sm">
+<i class="w-4 h-4 text-zinc-200" data-lucide="server"></i>
+</div>
+<span class="text-[11px] font-medium text-zinc-200 mt-1">App Node</span>
+<span class="text-[10px] font-mono text-zinc-500">Tomcat:8080</span>
+</div>
+<!-- Node 4: DB Cluster (Bottom) -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center">
+<div class="w-7 h-7 rounded-md bg-zinc-900 border border-zinc-800 flex items-center justify-center shadow-sm">
+<i class="w-3.5 h-3.5 text-zinc-300" data-lucide="database"></i>
+</div>
+<span class="text-[10px] text-zinc-400 mt-1 font-medium">DB Cluster</span>
+</div>
+</div>
+<!-- Topology Status Footer -->
+<div class="mt-2.5 pt-2 border-t border-zinc-800/80 flex items-center justify-between text-xs text-zinc-400">
+<span class="text-rose-400 font-medium flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+              Adversary to App Path Compromised
+            </span>
+<span class="text-zinc-500 text-[11px]">Zero Trust Ingress</span>
+</div>
+</div>
+</section>
+</main>
+<!-- ========================================================================= -->
+<!-- COMPACT LINEAR / VERCEL FOOTER BAR                                        -->
+<!-- ========================================================================= -->
+<footer class="border-t border-zinc-800/80 bg-zinc-950 px-4 py-2 text-xs text-zinc-400 flex flex-wrap items-center justify-between gap-2 z-40">
+<div class="flex items-center gap-3">
+<span class="flex items-center gap-1.5 text-emerald-400 font-medium">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          AUTONOMOUS FORECASTER ACTIVE
+        </span>
+<span class="text-zinc-800">|</span>
+<span class="font-mono text-zinc-400">SLIDING WINDOW: 60s @ 10Hz</span>
+<span class="text-zinc-800">|</span>
+<span>SHAP Attributor: <span class="font-mono text-zinc-300">v1.4.2</span></span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-zinc-500">SIH 2026 CYBER DEFENSE INITIATIVE</span>
+<span class="px-2 py-0.5 rounded-md bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-400">
+          HACKATHON DEPLOYMENT
+        </span>
+</div>
+</footer>
+</div>
+<script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Interactive button feedback
+    document.getElementById('btn-execute-all')?.addEventListener('click', function() {
+      const btn = this;
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i data-lucide="check-check" class="w-4 h-4"></i><span>MITIGATIONS DISPATCHED (3/3)</span>';
+      btn.classList.remove('bg-indigo-600', 'hover:bg-indigo-500');
+      btn.classList.add('bg-emerald-600', 'hover:bg-emerald-500', 'text-white');
+      lucide.createIcons();
+
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.classList.add('bg-indigo-600', 'hover:bg-indigo-500');
+        btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-500', 'text-white');
+        lucide.createIcons();
+      }, 3500);
+    });
+  </script>
+  <script>
+    (function () {
+      'use strict';
+
+      const API_BASE = 'http://127.0.0.1:8000/api';
+      const TIMEOUT_MS = 15000;
+
+      /* ---------- helpers ---------- */
+      async function apiGet(path, signal) {
+        const ctrl = signal || new AbortController();
+        const t = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+        try {
+          const res = await fetch(API_BASE + path, {
+            method: 'GET',
+            cache: 'no-store',
+            signal: ctrl.signal,
+          });
+          const body = await res.json().catch(() => ({}));
+          if (!res.ok || body.ok === false) {
+            throw new Error(body.error || ('HTTP ' + res.status));
+          }
+          return body;
+        } finally {
+          clearTimeout(t);
+        }
+      }
+
+      function esc(s) {
+        return String(s).replace(/[&<>"']/g, function (m) {
+          return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
+        });
+      }
+      function pct(v) { return (v * 100).toFixed(2) + '%'; }
+
+      const $ = (id) => document.getElementById(id);
+
+      /* ---------- header Model Weights ---------- */
+      function setMetric(id, text, cls) {
+        const el = $(id);
+        if (!el) return;
+        el.textContent = text;
+        el.className = 'text-xs font-mono font-semibold ' + (cls || 'text-zinc-100');
+      }
+      function markMetricsOffline(msg) {
+        $('m-accuracy') && ($('m-accuracy').title = msg);
+        setMetric('m-accuracy', 'N/A', 'text-amber-400');
+        setMetric('m-fpr', 'N/A', 'text-amber-400');
+        setMetric('m-precision', 'N/A', 'text-amber-400');
+        setMetric('m-recall', 'N/A', 'text-amber-400');
+        setMetric('m-f1', 'N/A', 'text-amber-400');
+        setMetric('m-inference', 'offline', 'text-amber-400');
+      }
+
+      async function loadMetrics() {
+        const t0 = performance.now();
+        const data = await apiGet('/metrics');
+        const ms = (performance.now() - t0);
+        const ok = (v) => v < 0.5 ? 'text-emerald-400' : 'text-zinc-100';
+        setMetric('m-accuracy', pct(data.accuracy), ok(data.fpr));
+        setMetric('m-fpr', pct(data.fpr), 'text-emerald-400');
+        setMetric('m-precision', pct(data.precision), 'text-indigo-400');
+        setMetric('m-recall', pct(data.recall), 'text-indigo-400');
+        setMetric('m-f1', pct(data.f1), 'text-indigo-400');
+        setMetric('m-inference', ms.toFixed(1) + ' ms', 'text-zinc-200');
+        metricsLoaded = true;
+        const grid = $('model-weights-grid');
+        if (grid) grid.title = 'XGBoost on CIC-IDS2017 — ' + data.n_test + ' held-out rows, ' +
+          (data.tp + data.tn) + ' correct / ' + data.n_test + ' · TP ' + data.tp + ' FP ' +
+          data.fp + ' TN ' + data.tn + ' FN ' + data.fn;
+      }
+
+      /* ---------- SHAP panel ---------- */
+      let attackTotal = 0;
+      let metricsLoaded = false;
+
+      function setShapList(html) {
+        const el = $('shap-list');
+        if (el) el.innerHTML = html;
+        if (window.lucide && window.lucide.createIcons) lucide.createIcons();
+      }
+
+      function shapRow(f, maxAbs) {
+        const pos = f.shap >= 0;
+        const w = Math.max(3, Math.min(100, (Math.abs(f.shap) / maxAbs) * 100));
+        const color = pos ? 'bg-rose-500' : 'bg-emerald-500';
+        const valCls = pos ? 'text-rose-400' : 'text-emerald-400';
+        const sign = pos ? '+' : '-';
+        const title = f.feature + ' raw value = ' + f.feature_value;
+        return '' +
+          '<div title="' + esc(title) + '">' +
+            '<div class="flex justify-between text-xs mb-1">' +
+              '<span class="text-zinc-200 font-medium">' + esc(f.feature) + '</span>' +
+              '<span class="font-mono ' + valCls + ' font-semibold">' + sign + Math.abs(f.shap).toFixed(3) +
+                ' SHAP (' + (pos ? 'attack' : 'normal') + ')</span>' +
+            '</div>' +
+            '<div class="w-full bg-zinc-950 rounded-full h-2 overflow-hidden border border-zinc-800/80">' +
+              '<div class="' + color + ' h-full rounded-full" style="width:' + w.toFixed(1) + '%"></div>' +
+            '</div>' +
+          '</div>';
+      }
+
+      function renderExplanation(ex) {
+        const top = ex.features_ranked || [];
+        const maxAbs = Math.max.apply(null, top.map(function (f) { return Math.abs(f.shap); }).concat([1e-9]));
+        if (!top.length) {
+          setShapList('<div class="text-zinc-500 text-[11px] py-1">No SHAP attributions returned by the backend.</div>');
+          return;
+        }
+        setShapList(top.map(function (f) { return shapRow(f, maxAbs); }).join(''));
+        const desc = $('shap-desc');
+        if (desc) desc.innerHTML = 'Feature attributions from <span class="font-mono text-zinc-300">' +
+          esc(ex.id) + '</span> — a real CIC-IDS2017 test flow the XGBoost model classified as ' +
+          '<span class="text-rose-400 font-medium">Attack</span> with P(attack) = ' +
+          '<span class="font-mono text-rose-300">' + (ex.prob_attack * 100).toFixed(2) + '%</span>.';
+        const note = $('shap-model-note');
+        if (note) note.textContent = 'TreeExplainer · base E[f(x)] = ' + ex.expected_value.toFixed(4) +
+          ' · ' + top.length + ' of 52 features shown';
+        const modelName = $('shap-model-name');
+        if (modelName) modelName.textContent = 'Trained XGBoost (SHAP TreeExplainer)';
+      }
+
+      function shapError(msg) {
+        if (!metricsLoaded) markMetricsOffline(msg);
+        if ($('shap-desc')) $('shap-desc').textContent = 'Could not load real SHAP attributions.';
+        setShapList('' +
+          '<div class="rounded-md border border-amber-500/30 bg-amber-500/5 p-2.5">' +
+            '<div class="text-[11px] font-medium text-amber-300 mb-1">ML Backend unreachable</div>' +
+            '<div class="text-[11px] text-amber-200/70 mb-2">' + esc(msg) + '</div>' +
+            '<button type="button" class="ml-retry px-2.5 py-1 rounded-md bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-[11px] font-medium border border-zinc-700 transition-colors">Retry connection</button>' +
+          '</div>');
+      }
+
+      async function explainSample(id) {
+        if (!id) return;
+        setShapList('<div class="flex items-center gap-2 text-zinc-500 py-1">' +
+          '<span class="inline-block w-3 h-3 rounded-full border-2 border-zinc-700 border-t-indigo-400 animate-spin"></span>' +
+          '<span class="text-[11px]">Computing SHAP values for ' + esc(id) + '…</span></div>');
+        try {
+          const data = await apiGet('/explain/' + encodeURIComponent(id));
+          renderExplanation(data.explanation);
+        } catch (err) {
+          shapError('SHAP / explain request failed: ' + err.message);
+        }
+      }
+
+      async function loadAttackSamples() {
+        const sel = $('attack-row-select');
+        try {
+          const data = await apiGet('/attack-samples');
+          attackTotal = data.total_attacks_predicted || 0;
+          const badge = $('attack-flows-badge');
+          if (badge) badge.textContent = attackTotal + ' ATTACK FLOWS' + (attackTotal === 1 ? '' : '');
+          const samples = data.samples || [];
+          if (!sel) return;
+          sel.innerHTML = samples.map(function (s) {
+            return '<option value="' + esc(s.id) + '">' + esc(s.id) + ' · P(attack)=' +
+              (s.prob_attack * 100).toFixed(1) + '%</option>';
+          }).join('') || '<option value="">No attack predictions available</option>';
+          if (samples.length) explainSample(samples[0].id);
+        } catch (err) {
+          attackTotal = 0;
+          const badge = $('attack-flows-badge');
+          if (badge) badge.textContent = '— ATTACK FLOWS';
+          if (sel) sel.innerHTML = '<option value="">Backend offline</option>';
+          shapError('Could not fetch attack-predicted flows: ' + err.message);
+        }
+      }
+
+      /* ---------- wiring & periodic refresh ---------- */
+      function bindEvents() {
+        document.addEventListener('click', function (e) {
+          const retry = e.target.closest('.ml-retry');
+          if (retry) init();
+        });
+        const btn = $('btn-refresh-shap');
+        if (btn) btn.addEventListener('click', function () {
+          explainSample($('attack-row-select') && $('attack-row-select').value);
+        });
+        const sel = $('attack-row-select');
+        if (sel) sel.addEventListener('change', function () {
+          explainSample(sel.value);
+        });
+      }
+
+      function init() {
+        bindEvents();
+        loadMetrics().catch(function (err) {
+          markMetricsOffline('Metrics request failed: ' + err.message);
+        });
+        loadAttackSamples();
+      }
+
+      document.addEventListener('DOMContentLoaded', init);
+      if (document.readyState !== 'loading') init();
+      setInterval(function () {
+        loadMetrics().catch(function () { /* surfaced on next render */ });
+      }, 60000);
+    })();
+  </script>
+</body></html>
